@@ -72,15 +72,26 @@ def shopping_cart():
     #   - keep track of the total amt of the entire order
     # - hand to the template the total order cost and the list of melon types
 
-    melon_list = list()
-    melon_list.append(melon_id)
-
-
-    session[melon_type][id] = list_of_ids
-    for melon in list_of_ids:
-
-
-    return render_template("cart.html")
+    # ex. session is {"shopping cart": [44, 31, 18]}
+    list_of_ids = session["shopping_cart"]
+    session.setdefault("cart", {})
+    
+    # while list_of_ids != []:
+    for melon_id in list_of_ids:
+        #if melon_id in list_of_ids:
+        # we have the id, now we need to get its price and name
+        melon = melons.get_by_id(melon_id)
+        
+        if melon_id in session["cart"]:
+            session["cart"][melon_id]["qty"] += 1
+            session["cart"][melon_id]["subtotal"] = session["cart"][melon_id]["price"] * session["cart"][melon_id]["qty"]
+        else:
+            session["cart"][melon_id] = {"price": melon.price, "name": melon.common_name, 
+                                        "qty": 1, "subtotal": session["cart"][melon_id]["price"] *  
+                                        session["cart"][melon_id]["qty"] }
+    cart = session["cart"]
+                                        
+    return render_template("cart.html", cart=cart)
 
 
 @app.route("/add_to_cart/<int:melon_id>")
@@ -100,7 +111,10 @@ def add_to_cart(melon_id):
     else:
         session["shopping_cart"].append(melon_id) 
 
-    return session
+    flash("Melon successfully added to shopping cart!")
+    return redirect("/cart")
+
+    # ex. session is {"shopping cart": [44, 31, 18]}
     #render_template("melon_details.html", melon=melon_added)
 
 
