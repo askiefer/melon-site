@@ -61,10 +61,10 @@ def show_melon(melon_id):
 def shopping_cart():
     """Display content of shopping cart."""
 
-    # TODO: Display the contents of the shopping cart.
+    #TODO: Display the contents of the shopping cart.
 
     # The logic here will be something like:
-    #
+    
     # - get the list-of-ids-of-melons from the session cart
     # - loop over this list:
     #   - keep track of information about melon types in the cart
@@ -83,33 +83,25 @@ def shopping_cart():
     return render_template("cart.html")
 
 
-@app.route("/add_to_cart/<int:id>")
-def add_to_cart(id):
+@app.route("/add_to_cart/<int:melon_id>")
+def add_to_cart(melon_id):
     """Add a melon to cart and redirect to shopping cart page.
 
     When a melon is added to the cart, redirect browser to the shopping cart
     page and display a confirmation message: 'Successfully added to cart'.
     """
 
-    melon = melons.get_by_id()
-    dictionary = dict()
-    # get_by_id returns a dictionary, {id: 14, price: 2}
-    
-    # need to create a dictionary, {id: {melon_type: X, price: x, common_name: X}}
-    if melon in dictionary:
-        dictionary.append
+    # melon is an object of the class Melon
+    # melon = melons.get_by_id(melon_id)
 
-        append the value by 1
+    # if the cart is not in the session, we add our shopping cart to the session
+    if shopping_cart not in session:
+        session["shopping_cart"] = [melon_id]
     else:
-        create a new key and value in the dictionary
+        session["shopping_cart"].append(melon_id) 
 
-    # TODO: Finish shopping cart functionality
-
-    # The logic here should be something like:
-    #
-    # - add the id of the melon they bought to the cart in the session
-
-    return render_template("melon_details.html", melon=melon_added)
+    return session
+    #render_template("melon_details.html", melon=melon_added)
 
 
 @app.route("/login", methods=["GET"])
